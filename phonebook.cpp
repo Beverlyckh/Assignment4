@@ -1,9 +1,9 @@
 //============================================================================
-// Name        : Assignment 1 - Phonebook Application Program
+// Name        : Assignment 4 - Phonebook Application Program
 // Author      : Beverly Ackah
 // Version     : November 2017
 // Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
+// Description : Phonebook App using binary search!
 //============================================================================
 
 #include <iostream>
@@ -18,9 +18,8 @@ int size = 0;
 int capacity = 300;
 
 Contacts* contactData ;
-BinarySearchTree<Contacts> bs;
+BinarySearchTree<Contacts> bs; //creation of binary search tree
 
-//expand array capacity
 void expandArray(){
 	capacity *= 2;
 	Contacts* resize_arr = new Contacts[capacity];
@@ -30,7 +29,6 @@ void expandArray(){
 	delete [] resize_arr;
 }
 
-//load data function
 void loadData(string data){
 	ifstream input;
 	ifstream linein;
@@ -42,7 +40,7 @@ void loadData(string data){
 	}
 	string line, first, last;
 	int number;
-	int i =0;
+
 	while(input){
 
 		getline(input,line, ' ');
@@ -58,19 +56,17 @@ void loadData(string data){
 			if(size == capacity){
 				expandArray();
 			}
-
 			bs.insert(newContact);
-
 			size++;
 			line="";
 		}
+
 	}
 }
 
 int main() {
-
 	contactData = new Contacts[capacity];
-	cout << "*** My PHONEBOOK APPLICATION ***" << endl;
+	cout << "*** MY PHONEBOOK APPLICATION ***" << endl;
 	loadData("phonebook.txt");
 	char operation=' ';
 
@@ -78,54 +74,52 @@ int main() {
 		cout << "Please choose an operation:" << endl;
 		cout << " A(Add) | | L(Load) |S(Search) | P(Print) | F(Filter) | Q(Quit): " << endl;
 		cin>>operation;
+		operation = tolower(operation);
 		switch(operation){
-
-//Add a new contact
+		//Add a new contact
 		case 'A' : case 'a':{
 			string firstname, lastname;
 			int number;
-			cout<<"Enter a first and last name"<<endl;
+			cout<<"Enter a first and last name"<<endl; //user first and last name
 			cin>>firstname;
 			cin>>lastname;
 			cout<<"Enter a number"<<endl;
-			cin>>number;
+			cin>>number; //user number
 			cin.clear();
 			Contacts contact(firstname,lastname,number);
-			bs.insert(contact);
-			//cout<<"Contact successfully added!"<<endl;
-
+			bs.insert(contact); //insertion in bst
 			size +=1;
 			break;
 		}
-//Load data
-		case 'L': case 'l' :{
+		//Load data into bst from a file
+		case 'L': case 'l':{
 			string filename;
-			int number;
-			bool found = false;
 			cout<<"Enter a filename"<<endl;
 			cin.ignore();
 			getline(cin, filename);
 			loadData(filename);
 			break;
 		}
-//Search for a contact
+		//Search for a contact from file
 		case 'S': case 's':{
 			string firstname;
 			string lastname;
-			int number;
-			bool found = false;
-
 			cout<<"Enter a first and last name"<<endl;
 			cin.ignore();
 			cin>>firstname;
 			cin>>lastname;
+
+			//The clock function is implemented to calculate the duration of the search!
 			clock_t begin = clock();
-			number = bs.getContact(firstname,lastname);
+			Contacts contact(firstname,lastname);
+			Contacts* contact1 = bs.inOrder(contact);
 			clock_t end = clock();
 			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
 
-			if( number != -1){
-				cout<<"Phone: "<<number<<endl;
+
+			//If Bst isn't empty, get the contacts
+			if( contact1 != NULL){
+				cout<<"Phone: "<<contact1->getNumber()<<endl;
 				cout<<" Time taken : "<<elapsed_secs<<endl;
 			}
 			else{
@@ -133,36 +127,36 @@ int main() {
 			}
 			break;
 		}
-
-//Print contact info
+		//Print contact info
 		case 'P': case 'p' :{
-
 			bs.inOrder();
 			cout<<size<<" contacts..."<<endl;
 			break;
 		}
 
-//Filter
+		//Filter
 		case 'F': case 'f':{
-
 			string firstname;
 			string lastname;
-			bool found = false;
+			int number;
 			cout<<"Enter a first and last name"<<endl;
 			cin.ignore();
 			cin>>firstname;
 			cin>>lastname;
-			bs.filter(firstname, lastname);
+			Contacts contact(firstname,lastname);
+			number = bs.filter(contact);
+			if( number != -1){
+				cout<<number<<" Contacts..."<<endl;
+
+			}
 			break;
 		}
+
 		default:break;
 		}
 
-//Leave the system
+		//Leave the system
 	} while(operation != 'Q' && operation!='q');
-
 	cout<<"Bye!"<<endl;
-
-
 	return 0;
 }

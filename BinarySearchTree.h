@@ -9,6 +9,7 @@
 #define BINARYSEARCHTREE_H_
 #include <iostream>
 #include <stack>
+
 using namespace std;
 
 template <class T>
@@ -34,8 +35,8 @@ private:
 	bool treeSearch(node<T>*, T&);
 	node<T>* findMax(node<T>*);
 	void deletenode(node<T>*&, T&);
-	int findContact(node<T>* p,string firstname,string lastname);
-	void printFilteredContacts(node<T>* p,string& firstname, string lastname);
+	T* inOrderT(node<T>* p, T&);
+	int printFilteredContacts(node<T>* p,T&);
 public:
 	BinarySearchTree();
 	void inOrder(){inOrderT(root);}
@@ -49,8 +50,8 @@ public:
 	//	void insert(T&); //non-recursive function call
 	node<T>* findMax(){return findMax(root);}
 	void deletenode(T& item){deletenode(root, item);}
-	int getContact(string firstname, string lastname);
-	void filter(string firstname, string lastname);
+	T* inOrder(T& );
+	int filter(T&);
 	~BinarySearchTree(){destroy(root);}
 
 };
@@ -61,26 +62,23 @@ BinarySearchTree<T>::BinarySearchTree(){
 }
 
 template <class T>
-int BinarySearchTree<T>::getContact(string firstname, string lastname){
+T* BinarySearchTree<T>::inOrder(T& item){
 
-	return findContact(root,firstname, lastname);
+	return inOrderT(root,item);
 
 }
 
 
 template <class T>
-int BinarySearchTree<T>::findContact(node<T>* p,string firstname, string lastname){
+T* BinarySearchTree<T>::inOrderT(node<T>* p,T& item){
 
 	if(p == NULL)
-		return -1;
-	else if(firstname == p->data.getFirstname() && lastname == p->data.getLastname()){
-		return p->data.getNumber();
-	}
-	else if(lastname <  p->data.getLastname())
-		return findContact(p->left, firstname,lastname);
-	else if(lastname  >p->data.getName())
-		return findContact(p->right, firstname,lastname);
-	return -1;
+		return NULL;
+	else if(item <  p->data)
+		return inOrderT(p->left, item);
+	else if(item >  p->data)
+		return inOrderT(p->right, item);
+	return &(p->data);
 }
 
 template <class T>
@@ -94,30 +92,25 @@ void BinarySearchTree<T>::inOrderT(node<T>* p){
 
 
 template <class T>
-void  BinarySearchTree<T>::filter(string firstname, string lastname){
-	if(getContact(firstname, lastname) != -1){
-		printFilteredContacts(root , firstname, lastname);
+int  BinarySearchTree<T>::filter(T &item){
+	if(inOrder(item) != NULL){
+		return printFilteredContacts(root ,item );
 	}
+	return -1;
 }
 
 
 template <class T>
-void  BinarySearchTree<T>::printFilteredContacts(node<T>* p,string& firstname, string lastname){
-
-
-//	if(p != NULL && p->data.getLastname() < lastname){
-//		printFilteredContacts(p->left,firstname, lastname);
-//	}
-//	if(p != NULL)
-//	  cout<<p->data<<endl;
-//		printFilteredContacts(p->right,firstname, lastname);
+int  BinarySearchTree<T>::printFilteredContacts(node<T>* p,T &item){
+	int count=0;
 	if(p == NULL){
-		return;
+		return -1;
 	}
-    node<T>* cp = root;
-    stack <node<T>*> st ;
+	node<T>* cp = root;
+	stack <node<T>*> st ;
 	for(;;){
 		while(cp ){
+
 			st.push(cp);
 			cp= cp->left;
 		}
@@ -126,14 +119,14 @@ void  BinarySearchTree<T>::printFilteredContacts(node<T>* p,string& firstname, s
 		}
 		cp = st.top();
 		st.pop();
-		if(cp->data.getLastname() < lastname)
-			cout<<cp->data<<" ";;
+		if(cp->data < item){
+			count +=1;
+			cout<<cp->data<<" ";
+
+		}
 		cp = cp->right;
 	}
-
-
-
-	return ;
+	return count;
 }
 
 

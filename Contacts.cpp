@@ -13,14 +13,14 @@ Contacts::Contacts() {
 }
 
 Contacts::Contacts( string firstname, string lastname,int infoContact){
-   this->firstname = firstname;
-   this->lastname = lastname;
-   this->infoContact = infoContact;
+	this->firstname = firstname;
+	this->lastname = lastname;
+	this->infoContact = infoContact;
 }
 
-string Contacts::getDetails() {
-	// TODO Auto-generated destructor stub
-	cout<<this->firstname<<" "<<this->lastname<<" "<<this->infoContact<<endl;
+Contacts::Contacts( string firstname, string lastname){
+	this->firstname = firstname;
+	this->lastname = lastname;
 }
 
 Contacts& Contacts::operator=(const Contacts &rhs){
@@ -43,23 +43,34 @@ string Contacts::getName(){
 }
 
 string Contacts::getFirstname(){
- return firstname;
+	return firstname;
 
 }
 
 string Contacts::getLastname(){
-return lastname;
+	return lastname;
 }
 
 
 bool Contacts::operator > (const Contacts &contact)
 {
-  return (lastname > contact.lastname);
+	if(firstname == contact.firstname){
+		return (lastname > contact.lastname);
+	}
+	return (firstname > contact.firstname);
 }
 bool Contacts::operator < (const Contacts &contact)
 {
-  return (lastname < contact.lastname);
+	if(firstname == contact.firstname){
+		return (lastname < contact.lastname);
+	}
+	return (firstname < contact.firstname);
 }
+bool Contacts::operator == (const Contacts &contact){
+	return firstname==contact.firstname && lastname==contact.lastname;
+}
+
+
 Contacts::~Contacts() {
 	// TODO Auto-generated destructor stub
 }
