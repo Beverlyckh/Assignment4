@@ -1,7 +1,7 @@
 //============================================================================
 // Name        : Assignment 1 - Phonebook Application Program
 // Author      : Beverly Ackah
-// Version     : September 2017
+// Version     : November 2017
 // Copyright   : Your copyright notice
 // Description : Hello World in C++, Ansi-style
 //============================================================================
@@ -20,6 +20,7 @@ int capacity = 300;
 Contacts* contactData ;
 BinarySearchTree<Contacts> bs;
 
+//expand array capacity
 void expandArray(){
 	capacity *= 2;
 	Contacts* resize_arr = new Contacts[capacity];
@@ -29,6 +30,7 @@ void expandArray(){
 	delete [] resize_arr;
 }
 
+//load data function
 void loadData(string data){
 	ifstream input;
 	ifstream linein;
